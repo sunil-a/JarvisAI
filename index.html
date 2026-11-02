@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS AI Assistant</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at center, #10243b, #03070e 70%);
+            color: #00eaff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 34px;
+            letter-spacing: 8px;
+            text-shadow: 0 0 20px #00eaff;
+        }
+
+        .subtitle {
+            margin-top: 12px;
+            color: #8caec7;
+            font-size: 12px;
+            letter-spacing: 4px;
+        }
+
+        .robot-area {
+            position: relative;
+            width: 280px;
+            height: 300px;
+            margin: 35px auto 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ring {
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border: 2px solid rgba(0, 234, 255, 0.35);
+            border-radius: 50%;
+            box-shadow: 0 0 25px rgba(0, 234, 255, 0.15);
+            animation: rotate 12s linear infinite;
+        }
+
+        .ring::before,
+        .ring::after {
+            content: "";
+            position: absolute;
+            border: 1px dashed #00eaff;
+            border-radius: 50%;
+        }
+
+        .ring::before {
+            inset: 18px;
+        }
+
+        .ring::after {
+            inset: -12px;
+            border-color: rgba(0, 234, 255, 0.2);
+        }
+
+        .robot {
+            position: relative;
+            width: 190px;
+            height: 175px;
+            background: linear-gradient(145deg, #29465d, #09121e);
+            border: 3px solid #00cfe8;
+            border-radius: 48% 48% 42% 42%;
+            box-shadow:
+                0 0 20px #00bcd4,
+                inset 0 0 25px rgba(0, 234, 255, 0.2);
+            animation: float 3s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .robot::before,
+        .robot::after {
+            content: "";
+            position: absolute;
+            top: 65px;
+            width: 13px;
+            height: 35px;
+            background: #00eaff;
+            border-radius: 5px;
+            box-shadow: 0 0 15px #00eaff;
+        }
+
+        .robot::before {
+            left: -12px;
+        }
+
+        .robot::after {
+            right: -12px;
+        }
+
+        .eyes {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .eye {
+            width: 39px;
+            height: 23px;
+            background: #00f0ff;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #00eaff;
+            animation: blink 5s infinite;
+        }
+
+        .mouth {
+            width: 65px;
+            height: 8px;
+            margin: 28px auto 0;
+            background: #00eaff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px #00eaff;
+        }
+
+        .speaking .mouth {
+            animation: talk 0.35s infinite alternate;
+        }
+
+        .status {
+            margin: 15px 0;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 8px;
+            background: #00ff91;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff91;
+        }
+
+        .panel {
+            padding: 20px;
+            border: 1px solid rgba(0, 234, 255, 0.3);
+            border-radius: 15px;
+            background: rgba(7, 22, 37, 0.8);
+        }
+
+        #response {
+            min-height: 24px;
+            margin-bottom: 15px;
+            color: #c4e9ff;
+            font-size: 14px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: 1px solid #00eaff;
+            border-radius: 25px;
+            background: transparent;
+            color: #00eaff;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #00eaff;
+            color: #03070e;
+            box-shadow: 0 0 20px #00eaff;
+        }
+
+        .footer {
+            margin-top: 20px;
+            color: #54748d;
+            font-size: 11px;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes blink {
+            0%, 46%, 50%, 100% { transform: scaleY(1); }
+            48% { transform: scaleY(0.1); }
+        }
+
+        @keyframes talk {
+            from { height: 5px; width: 40px; }
+            to { height: 22px; width: 60px; }
+        }
+
+        @media (max-width: 400px) {
+            .title { font-size: 25px; }
+            .robot-area { transform: scale(0.85); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <h1 class="title">J.A.R.V.I.S</h1>
+
+        <p class="subtitle">PERSONAL AI ASSISTANT</p>
+
+        <div class="robot-area">
+            <div class="ring"></div>
+
+            <div class="robot" id="robot">
+                <div class="eyes">
+                    <div class="eye"></div>
+                    <div class="eye"></div>
+                </div>
+
+                <div class="mouth"></div>
+            </div>
+        </div>
+
+        <div class="status">
+            <span class="dot"></span>
+            SYSTEM INTERFACE READY
+        </div>
+
+        <section class="panel">
+            <p id="response">
+                Hello! I am Jarvis. Your interface is ready.
+            </p>
+
+            <div class="buttons">
+                <button id="greetBtn">INITIALIZE</button>
+                <button id="timeBtn">SYSTEM TIME</button>
+                <button id="voiceBtn">TEST VOICE</button>
+            </div>
+        </section>
+
+        <p class="footer">
+            JARVIS AI · PERSONAL PROJECT · VERSION 1.0
+        </p>
+
+    </main>
+
+    <script>
+        const response = document.getElementById("response");
+        const robot = document.getElementById("robot");
+
+        function speak(message) {
+            response.textContent = message;
+
+            if ("speechSynthesis" in window) {
+                window.speechSynthesis.cancel();
+
+                const speech = new SpeechSynthesisUtterance(message);
+                speech.lang = "en-US";
+                speech.rate = 1;
+                speech.pitch = 0.8;
+
+                robot.classList.add("speaking");
+
+                speech.onend = () => {
+                    robot.classList.remove("speaking");
+                };
+
+                speech.onerror = () => {
+                    robot.classList.remove("speaking");
+                };
+
+                window.speechSynthesis.speak(speech);
+            }
+        }
+
+        document.getElementById("greetBtn").addEventListener("click", () => {
+            speak("Jarvis interface initialized. All visual systems are ready.");
+        });
+
+        document.getElementById("timeBtn").addEventListener("click", () => {
+            const now = new Date();
+
+            const time = now.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit"
+            });
+
+            speak("The current time is " + time);
+        });
+
+        document.getElementById("voiceBtn").addEventListener("click", () => {
+            speak("Hello Sunil. I am Jarvis, your personal assistant.");
+        });
+    </script>
+
+</body>
+</html>
